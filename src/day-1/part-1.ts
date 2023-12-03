@@ -21,7 +21,7 @@
 
 // Consider your entire calibration document. What is the sum of all of the calibration values?
 
-function puzzle1(input: string): number {
+function part1(input: string): number {
     const lines = input.split('\n');
     let total = 0;
 
@@ -51,7 +51,7 @@ function puzzle1(input: string): number {
 }
 
 console.log(
-    puzzle1(`
+    part1(`
 23krgjlpone
 kfxone67bzb2
 8jjpseven
