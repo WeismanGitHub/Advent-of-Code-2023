@@ -36,7 +36,7 @@ const numbers: Record<string, number> = {
 };
 
 function part2(input: string): number {
-    const lines = input.trim().split('\n');
+    const lines = input.trim().split(/\r?\n/);
     let total = 0;
 
     for (const line of lines) {

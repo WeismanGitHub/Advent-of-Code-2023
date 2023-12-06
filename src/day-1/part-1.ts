@@ -23,7 +23,7 @@
 import { readFileSync } from 'fs';
 
 function part1(input: string): number {
-    const lines = input.split('\n');
+    const lines = input.split(/\r?\n/);
     let total = 0;
 
     for (const line of lines) {
