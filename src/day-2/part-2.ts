@@ -48,7 +48,7 @@ function part1(input: string) {
                 }
             });
 
-            total += map['red'] * map['green'] * map['blue']
+            total += map['red'] * map['green'] * map['blue'];
         });
 
     return total;
