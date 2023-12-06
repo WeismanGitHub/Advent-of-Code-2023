@@ -23,10 +23,53 @@
 // In the example above, games 1, 2, and 5 would have been possible if the bag had been loaded with that configuration. However, game 3 would have been impossible because at one point the Elf showed you 20 red cubes at once; similarly, game 4 would also have been impossible because the Elf showed you 15 blue cubes at once. If you add up the IDs of the games that would have been possible, you get 8.
 
 // Determine which games would have been possible if the bag had been loaded with only 12 red cubes, 13 green cubes, and 14 blue cubes. What is the sum of the IDs of those games?
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
+
+const restrictions = {
+    red: 12,
+    green: 13,
+    blue: 14,
+};
 
 function part1(input: string) {
+    let total = 0;
 
+    input
+        .trim()
+        .split(/\r?\n/)
+        .forEach((game) => {
+            const id = game.split(': ')[0].split(' ')[1];
+            const sets = game
+                .split(': ')[1]
+                .replace(/;/g, ',') // For some this won't work without regex.
+                .split(', ')
+                .map((set) => {
+                    const [amount, color] = set.split(' ');
+
+                    return {
+                        amount: Number(amount),
+                        color: color,
+                    };
+                });
+
+            const map: Record<string, number> = {};
+
+            sets.forEach(({ color, amount }) => {
+                if (!map[color] || map[color] < amount) {
+                    map[color] = amount;
+                }
+            });
+
+            if (
+                map['red'] <= restrictions['red'] &&
+                map['green'] <= restrictions['green'] &&
+                map['blue'] <= restrictions['blue']
+            ) {
+                total += Number(id);
+            }
+        });
+
+    return total;
 }
 
 const input = readFileSync('./src/day-2/input.txt', 'utf-8');
