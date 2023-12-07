@@ -52,16 +52,16 @@ function part1(input: string) {
                 j++;
             }
 
-            // if before/after there's a special char
+            // if there's a symbol before/after
             if (
-                !periodOrNumRegex.test(currentLine[j]) ||
-                !periodOrNumRegex.test(currentLine[j - num.length - 1])
+                (currentLine[j] && !periodOrNumRegex.test(currentLine[j])) ||
+                (currentLine[j - num.length - 1] && !periodOrNumRegex.test(currentLine[j - num.length - 1]))
             ) {
                 total += Number(num);
                 continue;
             }
 
-            // if above/below there's a special char
+            // if there's a symbol above/below
             for (let k = j - 1 - num.length; k < j + 1; k++) {
                 if (
                     (lastLine?.[k] && !periodOrNumRegex.test(lastLine[k])) ||
@@ -78,14 +78,4 @@ function part1(input: string) {
 }
 
 const input = readFileSync('./src/day-3/input.txt', 'utf-8');
-input;
-// console.log(part1(input));
-console.log(
-    part1(`
-...733.......289..262.....520..................161.462..........450.........................183.............................................
-....*....................*.............707.352....*............/.....................801...@...............333..196........484.635......287.
-....42.........131....913..............*......&..........634..................440..&...............83.....@...........404$..=....*..423.*...
-    `)
-);
-// between 529,166 & 512,207
-// 733+520+161+462+450+183+707+352+333+484+635+287+42+913+404
+console.log(part1(input));
