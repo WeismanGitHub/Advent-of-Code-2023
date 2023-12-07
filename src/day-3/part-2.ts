@@ -70,53 +70,31 @@ function part2(input: string) {
             }
 
             // if there's a num above
-            if (lastLine && /\d/.test(lastLine.slice(j - 1, j + 2))) {
-                let rightIndex = j + 1;
-                let leftIndex = j - 1;
-                let currentNum = '';
+            if (lastLine && /\d/.test(lastLine.slice(j - 1 < 0 ? 0 : j - 1, j + 2))) {
+                const matches = [...lastLine.slice(j - 3 < 0 ? 0 : j - 3, j + 4).matchAll(/\d+/g)];
 
-                if (/\d/.test(lastLine[j])) {
-                    currentNum = lastLine[j];
-                }
+                matches.forEach((match) => {
+                    const startIndex = j - 3 + match.index!;
+                    const endIndex = startIndex + match[0].length - 1;
 
-                while (/\d/.test(lastLine[leftIndex])) {
-                    currentNum = `${lastLine[leftIndex]}${currentNum}`;
-                    leftIndex--;
-                }
-
-                while (/\d/.test(lastLine[rightIndex])) {
-                    currentNum += lastLine[rightIndex];
-                    rightIndex++;
-                }
-
-                if (currentNum) {
-                    partNums.push(Number(currentNum));
-                }
+                    if (startIndex === j + 1 || endIndex === j - 1 || (startIndex <= j && endIndex >= j)) {
+                        partNums.push(Number(match[0]));
+                    }
+                });
             }
 
             // if there's a num below
-            if (nextLine && /\d/.test(nextLine.slice(j - 1, j + 2))) {
-                let rightIndex = j + 1;
-                let leftIndex = j - 1;
-                let currentNum = '';
+            if (nextLine && /\d/.test(nextLine.slice(j - 1 < 0 ? 0 : j - 1, j + 2))) {
+                const matches = [...nextLine.slice(j - 3 < 0 ? 0 : j - 3, j + 4).matchAll(/\d+/g)];
 
-                if (/\d/.test(nextLine[j])) {
-                    currentNum = nextLine[j];
-                }
+                matches.forEach((match) => {
+                    const startIndex = j - 3 + match.index!;
+                    const endIndex = startIndex + match[0].length - 1;
 
-                while (/\d/.test(nextLine[leftIndex])) {
-                    currentNum = `${nextLine[leftIndex]}${currentNum}`;
-                    leftIndex--;
-                }
-
-                while (/\d/.test(nextLine[rightIndex])) {
-                    currentNum += nextLine[rightIndex];
-                    rightIndex++;
-                }
-
-                if (currentNum) {
-                    partNums.push(Number(currentNum));
-                }
+                    if (startIndex === j + 1 || endIndex === j - 1 || (startIndex <= j && endIndex >= j)) {
+                        partNums.push(Number(match[0]));
+                    }
+                });
             }
 
             if (partNums.length === 2) {
@@ -129,19 +107,4 @@ function part2(input: string) {
 }
 
 const input = readFileSync('./src/day-3/input.txt', 'utf-8');
-input;
-console.log(part2(input)); // too low: 80399371
-console.log(
-    part2(`
-467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..
-`)
-);
+console.log(part2(input));
