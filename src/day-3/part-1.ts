@@ -29,69 +29,48 @@
 import { readFileSync } from 'fs';
 
 function part1(input: string) {
+    const periodOrNumRegex = /(\.|\d)+/;
     const lines = input.trim().split(/\r?\n/);
     let total = 0;
 
     for (let i = 0; i < lines.length; i++) {
         const lastLine: string | undefined = lines[i - 1];
+        const nextLine: string | undefined = lines[i + 1];
         const currentLine = lines[i];
 
-        const partNumbers = [
-            ...currentLine.matchAll(/(\*|\$|@|#|%|&|\*|-|\+|=|\/)\d+/g),
-            ...currentLine.matchAll(/\d+(\*|\$|@|#|%|&|\*|-|\+|=)/g),
-        ];
-
-        partNumbers.forEach((num) => {
-            total += Number(num[0].match(/\d+/));
-        });
-
-        if (!lastLine) continue;
-
         for (let j = 0; j < currentLine.length; j++) {
-            const charIsNumber = !Number.isNaN(Number(currentLine[j]));
-            if (currentLine[j] === '.' || charIsNumber) continue;
+            // if not num
+            if (Number.isNaN(Number(currentLine[j]))) {
+                continue;
+            }
 
-            // If the special char isn't touching a number.
+            let num = '';
+
+            // match complete num
+            while (/\d+/.test(currentLine[j])) {
+                num += currentLine[j];
+                j++;
+            }
+
+            // if before/after there's a special char
             if (
-                Number.isNaN(Number(lastLine[j - 1])) &&
-                Number.isNaN(Number(lastLine[j])) &&
-                Number.isNaN(Number(lastLine[j + 1]))
+                !periodOrNumRegex.test(currentLine[j]) ||
+                !periodOrNumRegex.test(currentLine[j - num.length - 1])
             ) {
+                total += Number(num);
                 continue;
             }
 
-            const area = lastLine.slice(j - 4, j + 5);
-
-            // If the partNumber isn't already touching a special char horizontally.
-            if (/\d+(\*|\$|@|#|%|&|\*|-|\+|=)/.test(area) || /(\*|\$|@|#|%|&|\*|-|\+|=)\d+/.test(area)) {
-                continue;
+            // if above/below there's a special char
+            for (let k = j - 1 - num.length; k < j + 1; k++) {
+                if (
+                    (lastLine?.[k] && !periodOrNumRegex.test(lastLine[k])) ||
+                    (nextLine?.[k] && !periodOrNumRegex.test(nextLine[k]))
+                ) {
+                    total += Number(num);
+                    break;
+                }
             }
-
-            const res = [...area.matchAll(/\d+/g)];
-
-            if (!res) continue; // If end of line.
-
-            const match = res[res.length - 1]
-            
-            console.log(lastLine.slice(j - 4 + match.index! + match[0].length))
-            // console.log(j - 4 + res.index! + res[0].length)
-            // j = j - 4 + match.index! + match[0].length + 1
-            // j += res.index! + res[0].length - 4
-            total += Number(match[0])
-            // j += res.index! - 1
-
-            // const endOfPart = j + regexRes.index! - 2;
-
-            // if (/(\*|\$|@|#|%|&|\*|-|\+|=)/.test(currentLine[endOfPart])) {
-            //     j++
-            // }
-
-            // if (/(\*|\$|@|#|%|&|\*|-|\+|=)/.test(currentLine[endOfPart + 1])) {
-            //     j++
-            // }
-
-            // const numIndex = area.indexOf(partNum) + j - 4 - (3 - partNum.length)
-            // dont count duplicates. increase j when you reach a match. dont forget about rechecking if area is already counted
         }
     }
 
@@ -99,11 +78,14 @@ function part1(input: string) {
 }
 
 const input = readFileSync('./src/day-3/input.txt', 'utf-8');
-input
+input;
 // console.log(part1(input));
-part1(`
+console.log(
+    part1(`
 ...733.......289..262.....520..................161.462..........450.........................183.............................................
 ....*....................*.............707.352....*............/.....................801...@...............333..196........484.635......287.
 ....42.........131....913..............*......&..........634..................440..&...............83.....@...........404$..=....*..423.*...
-618.......272....*.........&......547.344...............#............689.589.*....150......382=................................168......433.
-`)
+    `)
+);
+// between 529,166 & 512,207
+// 733+520+161+462+450+183+707+352+333+484+635+287+42+913+404
