@@ -53,7 +53,7 @@ function part1(input: string) {
             }
 
             // if there's a symbol before/after
-            const charAfter = currentLine[j - num.length - 1]
+            const charAfter = currentLine[j - num.length - 1];
             if (
                 (currentLine[j] && !periodOrNumRegex.test(currentLine[j])) ||
                 (charAfter && !periodOrNumRegex.test(charAfter))
